@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Membership & Workout Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Background Animation Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            <span>FitCore</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active" data-target="dashboard">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </li>
+            <li data-target="members">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </li>
+            <li data-target="workouts">
+                <i class="fas fa-running"></i>
+                <span>Workouts</span>
+            </li>
+            <li data-target="schedule">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Schedule</span>
+            </li>
+            <li data-target="plans">
+                <i class="fas fa-id-card"></i>
+                <span>Membership Plans</span>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>FitCore v1.0</p>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="top-bar">
+            <button id="menuToggle" class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2 id="pageTitle">Dashboard</h2>
+            <div class="user-profile">
+                <span>Admin</span>
+                <div class="avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card glass">
+                    <div class="stat-icon" style="--color: #00f2ff;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statTotalMembers">0</h3>
+                        <p>Total Members</p>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+                <div class="stat-card glass">
+                    <div class="stat-icon" style="--color: #a855f7;">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statActiveMembers">0</h3>
+                        <p>Active Members</p>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+                <div class="stat-card glass">
+                    <div class="stat-icon" style="--color: #f472b6;">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statTotalWorkouts">0</h3>
+                        <p>Workout Plans</p>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+                <div class="stat-card glass">
+                    <div class="stat-icon" style="--color: #fbbf24;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="statTodayAttendance">0</h3>
+                        <p>Checked In Today</p>
+                    </div>
+                    <div class="stat-wave"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="glass chart-container">
+                    <div class="section-header">
+                        <h3><i class="fas fa-chart-line"></i> Membership Overview</h3>
+                    </div>
+                    <div class="mini-table">
+                        <div class="table-row header">
+                            <span>Plan</span>
+                            <span>Members</span>
+                            <span>Revenue</span>
+                        </div>
+                        <div id="membershipOverview"></div>
+                    </div>
+                </div>
+
+                <div class="glass recent-container">
+                    <div class="section-header">
+                        <h3><i class="fas fa-clock"></i> Recent Members</h3>
+                    </div>
+                    <div id="recentMembersList" class="recent-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Members Section -->
+        <section id="members" class="section">
+            <div class="action-bar">
+                <div class="search-box glass">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="memberSearch" placeholder="Search members...">
+                </div>
+                <button class="btn-primary" onclick="openMemberModal()">
+                    <i class="fas fa-plus"></i> Add Member
+                </button>
+            </div>
+            <div class="content-card glass">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Member</th>
+                                <th>Plan</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workouts Section -->
+        <section id="workouts" class="section">
+            <div class="action-bar">
+                <div class="search-box glass">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="workoutSearch" placeholder="Search workouts...">
+                </div>
+                <button class="btn-primary" onclick="openWorkoutModal()">
+                    <i class="fas fa-plus"></i> Create Workout
+                </button>
+            </div>
+            <div class="content-card glass">
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Workout Name</th>
+                                <th>Exercises</th>
+                                <th>Difficulty</th>
+                                <th>Duration</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workoutsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="section">
+            <div class="schedule-header">
+                <h3 id="currentMonth"></h3>
+                <div class="schedule-actions">
+                    <button class="btn-secondary" onclick="prevMonth()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn-secondary" onclick="nextMonth()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="calendar-grid glass" id="calendarGrid">
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+                <div id="calendarDays" class="calendar-days"></div>
+            </div>
+            
+            <div class="attendance-section">
+                <div class="glass attendance-card">
+                    <h3><i class="fas fa-clipboard-check"></i> Quick Attendance</h3>
+                    <div id="attendanceList" class="attendance-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Membership Plans Section -->
+        <section id="plans" class="section">
+            <div class="plans-grid" id="plansGrid"></div>
+        </section>
+    </main>
+
+    <!-- Member Modal -->
+    <div class="modal-overlay" id="memberModal">
+        <div class="modal glass">
+            <div class="modal-header">
+                <h3 id="memberModalTitle">Add Member</h3>
+                <button class="modal-close" onclick="closeMemberModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="memberForm">
+                    <input type="hidden" id="memberId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="memberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="memberEmail" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" id="memberAge" min="10" max="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="memberPhone">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Membership Plan</label>
+                            <select id="memberPlan" required>
+                                <option value="Basic">Basic</option>
+                                <option value="Premium">Premium</option>
+                                <option value="VIP">VIP</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="memberStartDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="memberStatus">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Expired">Expired</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeMemberModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveMember()">Save Member</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workout Modal -->
+    <div class="modal-overlay" id="workoutModal">
+        <div class="modal glass large">
+            <div class="modal-header">
+                <h3 id="workoutModalTitle">Create Workout</h3>
+                <button class="modal-close" onclick="closeWorkoutModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="workoutForm">
+                    <input type="hidden" id="workoutId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Workout Name</label>
+                            <input type="text" id="workoutName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Difficulty</label>
+                            <select id="workoutDifficulty">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Duration (minutes)</label>
+                            <input type="number" id="workoutDuration" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="workoutDesc">
+                        </div>
+                    </div>
+                    <div class="exercises-section">
+                        <h4>Exercises</h4>
+                        <div id="exercisesList"></div>
+                        <button type="button" class="btn-secondary" onclick="addExerciseField()">
+                            <i class="fas fa-plus"></i> Add Exercise
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeWorkoutModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveWorkout()">Save Workout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast glass">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operation successful</span>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

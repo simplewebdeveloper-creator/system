@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCore - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>FitCore</span>
+            </div>
+            <h2>Welcome Back!</h2>
+            <p class="auth-subtitle">Sign in to access your gym dashboard</p>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="signup.html">Join Now</a></p>
+            </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        redirectIfLoggedIn();
+        initAuthBackground();
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = loginUser(username, password);
+            
+            if (result.success) {
+                showAuthToast(result.message, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
+            } else {
+                showAuthToast(result.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

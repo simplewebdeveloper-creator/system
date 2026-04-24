@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCore - Sign Up</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <i class="fas fa-dumbbell"></i>
+                <span>FitCore</span>
+            </div>
+            <h2>Join FitCore</h2>
+            <p class="auth-subtitle">Register to become a member</p>
+            
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-user-tag"></i> Username</label>
+                    <input type="text" id="signupUsername" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+            </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        redirectIfLoggedIn();
+        initAuthBackground();
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showAuthToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAuthToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            const result = registerUser(name, email, username, password);
+            
+            if (result.success) {
+                showAuthToast(result.message, 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 800);
+            } else {
+                showAuthToast(result.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>
